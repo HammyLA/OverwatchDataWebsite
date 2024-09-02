@@ -3,6 +3,7 @@ import Card from "../components/Card";
 import { DataContext } from "../helper/DataContext";
 import { useSearchParams } from "react-router-dom";
 import { OverfastClient } from "overfast-api-client";
+import '../styles/Home.css'
 
 function Data() {
   const [params, setParams] = useSearchParams();
@@ -31,8 +32,8 @@ function Data() {
   console.log(list);
 
   return (
-    <div className="p-5">
-      <div className="container-fluid bg-dark text-white p-4">
+    <div className="p-5 min-100">
+      <div className="container-md border border-light rounded bg-dark text-white p-4">
         <h1 className="p-1">Searched for: {name}</h1>
         <h3 className="p-1 text-secondary">{total} Results</h3>
         <div className="row p-3">

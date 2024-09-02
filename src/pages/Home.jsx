@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createSearchParams, useNavigate } from "react-router-dom";
+import '../styles/Home.css'
 
 function Home() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Home() {
   };
 
   return (
-    <div>
+    <div className="container min-100">
       <div className="text-light p-5">
         <h1 className="text-light">
           <strong>Welcome to OverCheck</strong>
@@ -28,14 +29,14 @@ function Home() {
           A website for searching overwatch data
         </h2>
       </div>
-      <div className="container bg-dark w-75">
+      <div className="container w-75">
         <form className="d-flex py-4 px-2 mx-50" role="search">
           <input
             className="form-control me-2"
             type="search"
             name="name"
             value={inputValue}
-            placeholder="Search"
+            placeholder="Search Player"
             aria-label="Search"
             onChange={HandleInputChange}
           />

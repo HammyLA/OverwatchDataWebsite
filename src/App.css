@@ -5,5 +5,8 @@
 }
 
 body {
-  background-color: #424549;
+  background: rgb(73,73,73);
+  background: linear-gradient(0deg, rgba(73,73,73,1) 28%, rgba(0,0,0,1) 100%);
+  background-repeat: no-repeat;
+  height: 100%
 }

@@ -20,7 +20,7 @@ function Header() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-dark">
+      <nav className="navbar navbar-expand-lg bg-dark border-bottom border-light">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <h3 className="text-light">OverCheck</h3>
