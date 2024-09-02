@@ -23,7 +23,7 @@ function Header() {
       <nav className="navbar navbar-expand-lg bg-dark">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            <h3 className="text-light">Hammy</h3>
+            <h3 className="text-light">OverCheck</h3>
           </Link>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav">

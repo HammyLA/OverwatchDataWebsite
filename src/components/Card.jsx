@@ -4,12 +4,11 @@ import Image from "../assets/HamtaroN.webp";
 function Card(props) {
   return (
     <div className="col">
-      {" "}
-      <div className="card text-bg-dark border-light mb-3">
+      <div className="card text-bg-dark border-light mb-4">
         <div className="card-header">
           <img
             src={props.image}
-            className="card-img-top opacity-25 w-25"
+            className="card-img-top w-25 border border-light"
             alt="noImage"
           />
         </div>
