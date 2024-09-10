@@ -3,13 +3,13 @@ import Card from "../components/Card";
 import { DataContext } from "../helper/DataContext";
 import { useSearchParams } from "react-router-dom";
 import { OverfastClient } from "overfast-api-client";
-import '../styles/Home.css'
+import "../styles/Home.css";
 
 function Data() {
   const [params, setParams] = useSearchParams();
   const name = params.get("name");
   const ovfast = new OverfastClient();
-  const [list, setList] = useState([]);
+  const [list, setList] = useState();
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
 
@@ -22,10 +22,23 @@ function Data() {
     ovfast.players
       .searchPlayers(`${name}`, { offset: offset })
       .then((players) => {
-        setTotal(players.total)
+        setTotal(players.total);
         setList(players.results);
       });
   }, [offset]);
+
+  if (list == null) {
+    return (
+      <div className="p-5 min-100">
+        <div
+          class="spinner-grow position-absolute bottom-50 end-50"
+          role="status"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   console.log(offset);
 
@@ -61,6 +74,7 @@ function Data() {
           {list.map((item, index) => (
             <Card
               key={index}
+              id={item.player_id}
               name={item.name}
               image={item.avatar}
               title={item.title}

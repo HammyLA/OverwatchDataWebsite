@@ -1,12 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import { DataContext } from "../helper/DataContext";
 
 function Header() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
-  const { handleDataChange } = useContext(DataContext);
 
   const HandleClick = () => {
     console.log("Input value: ", inputValue);
@@ -52,6 +50,7 @@ function Header() {
             <button
               className="btn btn-outline-success"
               type="submit"
+              diabled={inputValue.length == 0}
               onClick={HandleClick}
             >
               Search
