@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link, useNavigate } from "react-router-dom";
+import { createSearchParams, Link, useNavigate } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
 
-  const HandleClick = () => {
+  const HandleClick = (e) => {
+    e.preventDefault();
     console.log("Input value: ", inputValue);
-    navigate("/search");
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({ name : inputValue}).toString()
+    });
   };
 
   const HandleInputChange = (e) => {
@@ -37,10 +41,10 @@ function Header() {
               </li>
             </ul>
           </div>
-          <form className="d-flex" role="search">
+          <form className="d-flex" role="search" onSubmit={HandleClick}>
             <input
               className="form-control me-2"
-              type="search"
+              type="text"
               name="name"
               value={inputValue}
               placeholder="Search"
@@ -51,7 +55,6 @@ function Header() {
               className="btn btn-outline-success"
               type="submit"
               disabled={inputValue.length == 0}
-              onClick={HandleClick}
             >
               Search
             </button>

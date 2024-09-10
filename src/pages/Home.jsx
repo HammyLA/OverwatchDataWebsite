@@ -6,7 +6,8 @@ function Home() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
 
-  const HandleClick = () => {
+  const HandleClick = (e) => {
+    e.preventDefault();
     console.log("Input value: ", inputValue);
     navigate({
       pathname: "/search",
@@ -30,10 +31,10 @@ function Home() {
         </h2>
       </div>
       <div className="container w-75">
-        <form className="d-flex py-4 px-2 mx-50" role="search">
+        <form className="d-flex py-4 px-2 mx-50" role="search" onSubmit={HandleClick}>
           <input
             className="form-control me-2"
-            type="search"
+            type="text"
             name="name"
             value={inputValue}
             placeholder="Search Player"
@@ -44,7 +45,6 @@ function Home() {
             className="btn btn-outline-success"
             type="submit"
             disabled={inputValue.length == 0}
-            onClick={HandleClick}
           >
             Search
           </button>

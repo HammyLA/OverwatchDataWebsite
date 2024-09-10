@@ -19,15 +19,17 @@ function Data() {
   };
 
   useEffect(() => {
+    setList(null)
+    console.log("received: ", {name})
     ovfast.players
       .searchPlayers(`${name}`, { offset: offset })
       .then((players) => {
         setTotal(players.total);
         setList(players.results);
       });
-  }, [offset]);
+  }, [offset, name]);
 
-  if (list == null) {
+  if (list == null || name != params.get("name")) {
     return (
       <div className="p-5 min-100">
         <div
