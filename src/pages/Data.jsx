@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Card from "../components/Card";
-import { DataContext } from "../helper/DataContext";
 import { useSearchParams } from "react-router-dom";
 import { OverfastClient } from "overfast-api-client";
 import "../styles/Home.css";

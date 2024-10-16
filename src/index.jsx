@@ -4,15 +4,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { DataProvider } from "./helper/DataContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <DataProvider>
     <React.StrictMode>
         <App />
     </React.StrictMode>
-  </DataProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
