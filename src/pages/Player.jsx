@@ -38,11 +38,14 @@ function Player() {
   if (!data) {
     return (
       <div className="min-100 ">
-        <div
-          class="spinner-grow position-absolute bottom-50 end-50"
-          role="status"
-        >
-          <span class="visually-hidden">Loading...</span>
+        <div class="position-absolute bottom-50 end-50">
+          <div
+            class="spinner-grow"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="p-4">Fetching Data</div>
         </div>
       </div>
     );
@@ -96,7 +99,9 @@ function Player() {
                     </li>
                   </ul>
                 </div>
-                <div className="col"><RankedFormat data={data}/></div>
+                <div className="col">
+                  <RankedFormat data={data} />
+                </div>
               </div>
             </div>
           </div>

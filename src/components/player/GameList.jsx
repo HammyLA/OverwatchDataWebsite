@@ -22,14 +22,14 @@ function GameList(props) {
           ).toFixed(2)}
           %
         </li>
-        <l1 className="list-group-item bg-dark text-white">
+        <li className="list-group-item bg-dark text-white">
           KDA:{" "}
           {(
             (props.avgdat.eliminations_avg_per_10_min +
               props.avgdat.assists_avg_per_10_min) /
             props.avgdat.deaths_avg_per_10_min
           ).toFixed(2)}
-        </l1>
+        </li>
       </ul>
     </>
   );
