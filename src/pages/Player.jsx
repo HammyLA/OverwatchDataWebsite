@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import AverageList from "../components/player/AverageList";
 import GameList from "../components/player/GameList";
 import RankedFormat from "../components/player/RankedFormat";
+import CombatList from "../components/player/CombatList";
 
 function Player() {
   const overfast = new OverfastClient();
@@ -39,10 +40,7 @@ function Player() {
     return (
       <div className="min-100 ">
         <div class="position-absolute bottom-50 end-50">
-          <div
-            class="spinner-grow"
-            role="status"
-          >
+          <div class="spinner-grow" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
           <div class="p-4">Fetching Data</div>
@@ -109,10 +107,10 @@ function Player() {
             <div class="col-sm">
               <AverageList data={average} />
             </div>
+            <div class="col-sm"> <CombatList data={combat}/></div>
             <div class="col-sm">
               <GameList avgdat={average} gamedat={gameData} />
             </div>
-            <div class="col-sm">col-sm</div>
           </div>
         </div>
       </div>

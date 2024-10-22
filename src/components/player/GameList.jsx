@@ -5,6 +5,9 @@ function GameList(props) {
     <>
       <h2 className="border border-light rounded">Game Stats</h2>
       <ul className="list-group">
+      <li className="list-group-item bg-dark text-white align-start">
+          Hours Players: {props.gamedat.time_played / 3600}
+        </li>
         <li className="list-group-item bg-dark text-white align-start">
           Games Played: {props.gamedat.games_played}
         </li>
