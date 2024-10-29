@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Home.css";
 import { OverfastClient } from "overfast-api-client";
 import { useSearchParams } from "react-router-dom";
@@ -6,35 +6,45 @@ import AverageList from "../components/player/AverageList";
 import GameList from "../components/player/GameList";
 import RankedFormat from "../components/player/RankedFormat";
 import CombatList from "../components/player/CombatList";
+import axios from "axios";
 
 function Player() {
   const overfast = new OverfastClient();
   const [params, setParams] = useSearchParams();
+  const [dataParam, setDataParam] = useState({ gamemode : "quickplay"})
   const [data, setData] = useState();
   const [average, setAverage] = useState();
   const [gameData, setGameData] = useState();
   const [combat, setCombat] = useState();
+  const [test, setTest] = useState();
   const id = params.get("player");
+
   useEffect(() => {
+    if (!id) return;
+    const url = `https://overfast-api.tekrop.fr/players/${id}/stats/summary`;
+
+    axios.get(url, {params : { gamemode : dataParam.gamemode }}).then((d) => {
+      console.log(d.data);
+      setGameData(d.data.general);
+      setCombat(d.data.general.total);
+      setAverage(d.data.general.average);
+    });
     overfast.players
       .player(id)
       .summary()
       .then((summary) => {
-        console.log(summary);
         setData(summary);
+        console.log(data);
       });
-    overfast.players
-      .player(id)
-      .career({ gamemode: "quickplay" })
-      .then((career) => {
-        console.log(career["all-heroes"]);
-        if (career["all-heroes"]) {
-          setAverage(career["all-heroes"].average);
-          setGameData(career["all-heroes"].game);
-          setCombat(career["all-heroes"].combat);
-        }
-      });
-  }, [id]);
+  }, [dataParam]);
+
+  function changeMode(mode) {
+    console.log(mode)
+    setDataParam(prev => ({
+      ...prev,
+      gamemode : mode
+    }))
+  }
 
   if (!data) {
     return (
@@ -60,13 +70,13 @@ function Player() {
           <div class="row">
             <div class="col-sm-8">
               <div
-                className="row border border-light"
+                className="row-5 m-2 border border-light"
                 style={{
                   backgroundImage: `linear-gradient(rgba(25,25,25,0.2), rgba(25,25,25,0.7)), url(${data.namecard}`,
                   backgroundSize: "contain",
                 }}
               >
-                <div className="row p-3">
+                <div className="row p-3 position-relative">
                   <img
                     src={data.endorsement ? data.endorsement.frame : ""}
                     className="col-2"
@@ -75,9 +85,32 @@ function Player() {
                     src={data.avatar}
                     className="col-2 p-1 border border-light"
                   />
-                  <div className="col-5 ">
+                  <div className="col-5">
                     <h1>{id}</h1>
                     <h2>{data.title ? data.title : "No Title"}</h2>
+                    <div class="dropdown position-absolute end-0 mx-4" data-bs-theme="dark">
+                      <a
+                        class="btn btn-dark dropdown-toggle border-secondary"
+                        href="#"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        {dataParam.gamemode.toUpperCase()}
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <button class="dropdown-item" href="#" type="button" onClick={() => changeMode("quickplay")}>
+                            Quickplay
+                          </button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" href="#" type="button" onClick={() => changeMode("competitive")}>
+                            Competitive
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -85,7 +118,7 @@ function Player() {
 
             <div class="col-sm-4">
               <div className="row">
-                <h2>Ranks</h2>
+                <h2>Season {data.competitive.pc.season} Rank</h2>
                 <div className="col-4">
                   <ul className="list-group">
                     <li className="list-group-item bg-dark text-white">Tank</li>
@@ -107,9 +140,12 @@ function Player() {
             <div class="col-sm">
               <AverageList data={average} />
             </div>
-            <div class="col-sm"> <CombatList data={combat}/></div>
             <div class="col-sm">
-              <GameList avgdat={average} gamedat={gameData} />
+              {" "}
+              <CombatList data={combat} />
+            </div>
+            <div class="col-sm">
+              <GameList gamedat={gameData} />
             </div>
           </div>
         </div>
