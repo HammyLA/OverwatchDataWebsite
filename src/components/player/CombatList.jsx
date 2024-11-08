@@ -1,30 +1,34 @@
-import React from 'react'
+import React from "react";
+import PlayerListFormat from "./PlayerListFormat";
 
 function CombatList(props) {
   return (
     <div>
       <>
-      <h2 className="border border-light rounded">Lifetime Total</h2>
-      <ul className="list-group">
-        <li className="list-group-item bg-dark text-white">
-          Eliminations: {props.data.eliminations}
-        </li>
-        <li className="list-group-item bg-dark text-white">
-          Deaths: {props.data.deaths}
-        </li>
-        <li className="list-group-item bg-dark text-white">
-          Assists: {props.data.assists}
-        </li>
-        <li className="list-group-item bg-dark text-white">
-          Damage: {props.data.damage}
-        </li>
-        <li className="list-group-item bg-dark text-white">
-          Healing: {props.data.healing}
-        </li>
-      </ul>
-    </>
+        <h2 className="border border-light rounded">Lifetime Total</h2>
+        <ul className="list-group">
+          <li className="list-group-item bg-dark text-white">
+            <PlayerListFormat
+              data={props.data.eliminations}
+              text={"Eliminations"}
+            />
+          </li>
+          <li className="list-group-item bg-dark text-white">
+            <PlayerListFormat data={props.data.deaths} text={"Deaths"} />
+          </li>
+          <li className="list-group-item bg-dark text-white">
+            <PlayerListFormat data={props.data.assists} text={"Assists"} />
+          </li>
+          <li className="list-group-item bg-dark text-white">
+            <PlayerListFormat data={props.data.damage} text={"Damage"} />
+          </li>
+          <li className="list-group-item bg-dark text-white">
+            <PlayerListFormat data={props.data.healing} text={"Healing"} />
+          </li>
+        </ul>
+      </>
     </div>
-  )
+  );
 }
 
-export default CombatList
+export default CombatList;

@@ -1,29 +1,40 @@
 import React from "react";
+import PlayerListFormat from "./PlayerListFormat";
 
 function GameList(props) {
-  const gamedat = props.gamedat
+  const gamedat = props.gamedat;
 
   return (
     <>
       <h2 className="border border-light rounded">Game Stats</h2>
       <ul className="list-group">
-      <li className="list-group-item bg-dark text-white align-start">
-          Hours Played: {(gamedat.time_played / 3600).toFixed(0)}
+        <li className="list-group-item bg-dark text-white align-start">
+          <PlayerListFormat
+            data={(gamedat.time_played / 3600).toFixed(0)}
+            text={"Hours Played"}
+          />
         </li>
         <li className="list-group-item bg-dark text-white align-start">
-          Games Played: {gamedat.games_played}
+          <PlayerListFormat
+            data={gamedat.games_played}
+            text={"Games Played"}
+          />
         </li>
         <li className="list-group-item bg-dark text-white">
-          Games Won: {gamedat.games_won}
+          <PlayerListFormat data={gamedat.games_won} text={"Games Won"} />
         </li>
         <li className="list-group-item bg-dark text-white">
-          Games Lost: {gamedat.games_lost}
+          <PlayerListFormat data={gamedat.games_lost} text={"Games Lost"} />
         </li>
         <li className="list-group-item bg-dark text-white">
-          Win Rate: {gamedat.winrate}%
+          <PlayerListFormat
+            data={gamedat.winrate}
+            text={"Win Rate"}
+            extra={"%"}
+          />
         </li>
         <li className="list-group-item bg-dark text-white">
-          KDA: {gamedat.kda}
+          <PlayerListFormat data={gamedat.kda} text={"KDA"} />
         </li>
       </ul>
     </>
