@@ -11,23 +11,37 @@ import axios from "axios";
 function Player() {
   const overfast = new OverfastClient();
   const [params, setParams] = useSearchParams();
-  const [dataParam, setDataParam] = useState({ gamemode : "quickplay"})
+  const [dataParam, setDataParam] = useState({ gamemode: "quickplay" });
   const [data, setData] = useState();
   const [average, setAverage] = useState();
   const [gameData, setGameData] = useState();
   const [combat, setCombat] = useState();
-  const [test, setTest] = useState();
+  const [role, setRole] = useState("any");
   const id = params.get("player");
 
   useEffect(() => {
     if (!id) return;
     const url = `https://overfast-api.tekrop.fr/players/${id}/stats/summary`;
 
-    axios.get(url, {params : { gamemode : dataParam.gamemode }}).then((d) => {
+    axios.get(url, { params: { gamemode: dataParam.gamemode } }).then((d) => {
       console.log(d.data);
-      setGameData(d.data.general);
-      setCombat(d.data.general.total);
-      setAverage(d.data.general.average);
+      if (role == "any") {
+        setGameData(d.data.roles.support);
+        setCombat(d.data.general.total);
+        setAverage(d.data.general.average);
+      } else if (role == "damage") {
+        setGameData(d.data.roles.damage);
+        setCombat(d.data.roles.damage.total);
+        setAverage(d.data.roles.damage.average);
+      } else if (role == "support") {
+        setGameData(d.data.roles.support);
+        setCombat(d.data.roles.support.total);
+        setAverage(d.data.roles.support.average);
+      } else {
+        setGameData(d.data.roles.tank);
+        setCombat(d.data.roles.tank.total);
+        setAverage(d.data.roles.tank.average);
+      }
     });
     overfast.players
       .player(id)
@@ -36,16 +50,20 @@ function Player() {
         setData(summary);
         console.log(data);
       });
-  }, [dataParam]);
+  }, [dataParam, role]);
 
   function changeMode(mode) {
-    console.log(mode)
-    setDataParam(prev => ({
+    console.log(mode);
+    setDataParam((prev) => ({
       ...prev,
-      gamemode : mode
-    }))
+      gamemode: mode,
+    }));
   }
 
+  function changeRole(newrole) {
+    console.log(newrole)
+    setRole(newrole)
+  }
   if (!data) {
     return (
       <div className="min-100 ">
@@ -70,10 +88,11 @@ function Player() {
           <div class="row">
             <div class="col-sm-8">
               <div
-                className="row-5 m-2 border border-light"
+                className="container border border-light"
                 style={{
-                  backgroundImage: `linear-gradient(rgba(25,25,25,0.2), rgba(25,25,25,0.7)), url(${data.namecard}`,
+                  backgroundImage: `linear-gradient(rgba(25,25,25,0.2), rgba(25,25,25,0.7)), url(${data.namecard})`,
                   backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
                 }}
               >
                 <div className="row p-3 position-relative">
@@ -88,28 +107,83 @@ function Player() {
                   <div className="col-5">
                     <h1>{id}</h1>
                     <h2>{data.title ? data.title : "No Title"}</h2>
-                    <div class="dropdown position-absolute end-0 mx-4" data-bs-theme="dark">
-                      <a
-                        class="btn btn-dark dropdown-toggle border-secondary"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {dataParam.gamemode.toUpperCase()}
-                      </a>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <button class="dropdown-item" href="#" type="button" onClick={() => changeMode("quickplay")}>
-                            Quickplay
-                          </button>
-                        </li>
-                        <li>
-                          <button class="dropdown-item" href="#" type="button" onClick={() => changeMode("competitive")}>
-                            Competitive
-                          </button>
-                        </li>
-                      </ul>
+                    <div className="row position-absolute end-0 mx-4">
+                      <div class="dropdown col" data-bs-theme="dark">
+                        <a
+                          class="btn btn-dark dropdown-toggle border-secondary"
+                          href="#"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {role.toUpperCase()}
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <button
+                              class="dropdown-item"
+                              href="#"
+                              type="button"
+                              onClick={() => changeRole("tank")}
+                            >
+                              Tank
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              class="dropdown-item"
+                              href="#"
+                              type="button"
+                              onClick={() => changeRole("damage")}
+                            >
+                              Damage
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              class="dropdown-item"
+                              href="#"
+                              type="button"
+                              onClick={() => changeRole("support")}
+                            >
+                              Support
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="dropdown col" data-bs-theme="dark">
+                        <a
+                          class="btn btn-dark dropdown-toggle border-secondary"
+                          href="#"
+                          role="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {dataParam.gamemode.toUpperCase()}
+                        </a>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <button
+                              class="dropdown-item"
+                              href="#"
+                              type="button"
+                              onClick={() => changeMode("quickplay")}
+                            >
+                              Quickplay
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              class="dropdown-item"
+                              href="#"
+                              type="button"
+                              onClick={() => changeMode("competitive")}
+                            >
+                              Competitive
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>

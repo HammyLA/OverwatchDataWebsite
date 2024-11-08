@@ -1,4 +1,5 @@
 import React from "react";
+import PlayerListFormat from "./PlayerListFormat";
 
 function AverageList(props) {
   const data = props.data;
@@ -8,19 +9,19 @@ function AverageList(props) {
       <h2 className="border border-light rounded">Average Per 10 Min</h2>
       <ul className="list-group">
         <li className="list-group-item bg-dark text-white align-start">
-          Eliminations: {data.eliminations}
+          <PlayerListFormat data={data.eliminations} text={"Eliminations"} />
         </li>
         <li className="list-group-item bg-dark text-white">
-          Deaths: {data.deaths}
+          <PlayerListFormat data={data.deaths} text={"Deaths"} />
         </li>
         <li className="list-group-item bg-dark text-white">
-          Assists: {data.assists}
+          <PlayerListFormat data={data.assists} text={"Assists"} />
         </li>
         <li className="list-group-item bg-dark text-white">
-          Damage: {data.damage}
+          <PlayerListFormat data={data.damage} text={"Damage"} />
         </li>
         <li className="list-group-item bg-dark text-white">
-          Healing: {data.healing}
+          <PlayerListFormat data={data.healing} text={"Healing"} />
         </li>
       </ul>
     </>
