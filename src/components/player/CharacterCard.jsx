@@ -17,7 +17,7 @@ function CharacterCard(props) {
       }
     }
     setHeroData(heroList[hero]);
-  }, [heroList]);
+  }, [heroList, hero]);
 
   if (heroData) {
     return (
