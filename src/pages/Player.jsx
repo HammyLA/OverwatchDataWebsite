@@ -7,12 +7,14 @@ import GameList from "../components/player/GameList";
 import RankedFormat from "../components/player/RankedFormat";
 import CombatList from "../components/player/CombatList";
 import axios from "axios";
+import CharacterCard from "../components/player/CharacterCard";
 
 function Player() {
   const overfast = new OverfastClient();
   const [params, setParams] = useSearchParams();
   const [dataParam, setDataParam] = useState({ gamemode: "quickplay" });
-  const [data, setData] = useState();
+  const [summaryData, setSummaryData] = useState();
+  const [statsData, setStatsData] = useState();
   const [average, setAverage] = useState();
   const [gameData, setGameData] = useState();
   const [combat, setCombat] = useState();
@@ -25,32 +27,38 @@ function Player() {
 
     axios.get(url, { params: { gamemode: dataParam.gamemode } }).then((d) => {
       console.log(d.data);
-      if (role == "any") {
-        setGameData(d.data.roles.support);
-        setCombat(d.data.general.total);
-        setAverage(d.data.general.average);
-      } else if (role == "damage") {
-        setGameData(d.data.roles.damage);
-        setCombat(d.data.roles.damage.total);
-        setAverage(d.data.roles.damage.average);
-      } else if (role == "support") {
-        setGameData(d.data.roles.support);
-        setCombat(d.data.roles.support.total);
-        setAverage(d.data.roles.support.average);
-      } else {
-        setGameData(d.data.roles.tank);
-        setCombat(d.data.roles.tank.total);
-        setAverage(d.data.roles.tank.average);
-      }
+      setStatsData(d.data);
     });
     overfast.players
       .player(id)
       .summary()
       .then((summary) => {
-        setData(summary);
-        console.log(data);
+        setSummaryData(summary);
+        console.log(summaryData);
       });
-  }, [dataParam, role]);
+  }, [dataParam]);
+
+  useEffect(() => {
+    if (statsData) {
+      if (role == "any") {
+        setGameData(statsData.general);
+        setCombat(statsData.general.total);
+        setAverage(statsData.general.average);
+      } else if (role == "damage" && statsData.roles.damage) {
+        setGameData(statsData.roles.damage);
+        setCombat(statsData.roles.damage.total);
+        setAverage(statsData.roles.damage.average);
+      } else if (role == "support" && statsData.roles.support) {
+        setGameData(statsData.roles.support);
+        setCombat(statsData.roles.support.total);
+        setAverage(statsData.roles.support.average);
+      } else if (role == "tank" && statsData.roles.tank) {
+        setGameData(statsData.roles.tank);
+        setCombat(statsData.roles.tank.total);
+        setAverage(statsData.roles.tank.average);
+      }
+    }
+  }, [statsData, role]);
 
   function changeMode(mode) {
     console.log(mode);
@@ -61,10 +69,23 @@ function Player() {
   }
 
   function changeRole(newrole) {
-    console.log(newrole)
-    setRole(newrole)
+    console.log(newrole);
+    setRole(newrole);
   }
-  if (!data) {
+
+  function seasonNumber(competitiveData) {
+    if (competitiveData) {
+      if (competitiveData.console) {
+        return competitiveData.console.season;
+      } else if (competitiveData.pc) {
+        return competitiveData.pc.season;
+      }
+    } else {
+      return "N";
+    }
+  }
+
+  if (!summaryData) {
     return (
       <div className="min-100 ">
         <div class="position-absolute bottom-50 end-50">
@@ -75,10 +96,10 @@ function Player() {
         </div>
       </div>
     );
-  } else if (!average) {
+  } else if (!statsData || !gameData || !average || !combat) {
     return (
-      <div className="min-100 ">
-        <h1>No Data Available</h1>
+      <div className="min-100">
+        <h1>NO DATA AVAILABLE</h1>
       </div>
     );
   } else {
@@ -88,25 +109,30 @@ function Player() {
           <div class="row">
             <div class="col-sm-8">
               <div
-                className="container border border-light"
+                className="container border border-light position-relative"
                 style={{
-                  backgroundImage: `linear-gradient(rgba(25,25,25,0.2), rgba(25,25,25,0.7)), url(${data.namecard})`,
+                  backgroundImage: `linear-gradient(rgba(25,25,25,0.2), rgba(25,25,25,0.7)), url(${summaryData.namecard})`,
                   backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat",
                 }}
               >
                 <div className="row p-3 position-relative">
                   <img
-                    src={data.endorsement ? data.endorsement.frame : ""}
+                    src={
+                      summaryData.endorsement
+                        ? summaryData.endorsement.frame
+                        : ""
+                    }
                     className="col-2"
                   />
                   <img
-                    src={data.avatar}
-                    className="col-2 p-1 border border-light"
+                    src={summaryData.avatar}
+                    className="col-2 p-2 border border-light"
                   />
-                  <div className="col-5">
+                  <div className="col position-absolute end-25">
                     <h1>{id}</h1>
-                    <h2>{data.title ? data.title : "No Title"}</h2>
+                    <h2>
+                      {summaryData.title ? summaryData.title : "No Title"}
+                    </h2>
                     <div className="row position-absolute end-0 mx-4">
                       <div class="dropdown col" data-bs-theme="dark">
                         <a
@@ -119,6 +145,16 @@ function Player() {
                           {role.toUpperCase()}
                         </a>
                         <ul class="dropdown-menu">
+                          <li>
+                            <button
+                              class="dropdown-item"
+                              href="#"
+                              type="button"
+                              onClick={() => changeRole("any")}
+                            >
+                              Any
+                            </button>
+                          </li>
                           <li>
                             <button
                               class="dropdown-item"
@@ -192,7 +228,7 @@ function Player() {
 
             <div class="col-sm-4">
               <div className="row">
-                <h2>Season {data.competitive.pc.season} Rank</h2>
+                <h2>Season {seasonNumber(summaryData.competitive)} Rank</h2>
                 <div className="col-4">
                   <ul className="list-group">
                     <li className="list-group-item bg-dark text-white">Tank</li>
@@ -205,12 +241,12 @@ function Player() {
                   </ul>
                 </div>
                 <div className="col">
-                  <RankedFormat data={data} />
+                  <RankedFormat data={summaryData} />
                 </div>
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row my-3">
             <div class="col-sm">
               <AverageList data={average} />
             </div>
@@ -221,6 +257,9 @@ function Player() {
             <div class="col-sm">
               <GameList gamedat={gameData} />
             </div>
+          </div>
+          <div className="my-5">
+            <CharacterCard data={statsData.heroes}/>
           </div>
         </div>
       </div>
