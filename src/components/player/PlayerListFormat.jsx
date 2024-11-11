@@ -1,11 +1,13 @@
 import React from "react";
 
 function PlayerListFormat(props) {
-    
   return (
-    <div className="row">
-      <div className="col">{props.text}</div>
-      <div className="col">{props.data}{props.extra}</div>
+    <div className="d-flex justify-content-between">
+      <div>{props.text}</div>
+      <div>
+        {props.data ? props.data : "0"}
+        {props.extra}
+      </div>
     </div>
   );
 }
