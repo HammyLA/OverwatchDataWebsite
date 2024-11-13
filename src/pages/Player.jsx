@@ -81,7 +81,7 @@ function Player() {
         return competitiveData.pc.season;
       }
     } else {
-      return "N";
+      return null;
     }
   }
 
@@ -228,7 +228,7 @@ function Player() {
 
             <div class="col-sm-4">
               <div className="row">
-                <h2>Season {seasonNumber(summaryData.competitive)} Rank</h2>
+                <h2>{seasonNumber(summaryData.competitive) ? `Season ${seasonNumber(summaryData.competitive)} Ranked` : "Not Ranked"}</h2>
                 <div className="col-4">
                   <ul className="list-group">
                     <li className="list-group-item bg-dark text-white">Tank</li>

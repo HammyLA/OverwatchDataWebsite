@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import AverageList from "./AverageList";
 import GameList from "./GameList";
 import CombatList from "./CombatList";
-import { firstToUpper } from "../../helper/Utility";
+import { firstToUpper, hyphenToUpper } from "../../helper/Utility";
 
 function CharacterCard(props) {
   const heroList = props.data;
   const [heroData, setHeroData] = useState();
   const [hero, setHero] = useState();
+
   useEffect(() => {
     var max = 0;
     for (const hero in heroList) {
@@ -16,15 +17,45 @@ function CharacterCard(props) {
         setHero(hero);
       }
     }
+  }, [heroList]);
+
+  useEffect(() => {
     setHeroData(heroList[hero]);
-  }, [heroList, hero]);
+  }, [hero]);
 
   if (heroData) {
     return (
       <div className="col">
         <div className="card text-bg-dark border-light mb-4">
           <div className="card-body">
-            <h2 className="card-title text-truncate">{firstToUpper(hero)}</h2>
+            <h2 className="card-title text-truncate">{hyphenToUpper(hero)}</h2>
+            <div class="dropdown col" data-bs-theme="dark">
+              <a
+                class="btn btn-dark dropdown-toggle border-secondary"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {hyphenToUpper(hero)}
+              </a>
+              <ul class="dropdown-menu">
+                {Object.keys(heroList).map((character) => {
+                  return (
+                    <li key={character}>
+                      <button
+                        class="dropdown-item"
+                        href="#"
+                        type="button"
+                        onClick={() => setHero(character)}
+                      >
+                        {hyphenToUpper(character)}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
             <div class="row my-3">
               <div class="col-sm">
                 <AverageList data={heroData.average} />
